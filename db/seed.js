@@ -9,10 +9,7 @@ const SuccessStory = require("../models/SuccessStory.model");
 
 const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/habit-tracker-app";
 
-mongoose.connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(MONGO_URI)
     .then(() => {
         console.log("Connected to MongoDB");
         seedData();
