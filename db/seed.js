@@ -33,7 +33,8 @@ async function seedData() {
         age: 30,
         gender: "male",
         isAdmin: true,
-      },
+        picture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+              },
       {
         name: "Jane Smith",
         email: "jane@example.com",
@@ -41,6 +42,7 @@ async function seedData() {
         age: 25,
         gender: "female",
         isAdmin: false,
+        picture: "https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde",
       },
       {
         name: "Sam Johnson",
@@ -49,6 +51,7 @@ async function seedData() {
         age: 28,
         gender: "non-binary",
         isAdmin: false,
+        picture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
       },
     ]);
 
