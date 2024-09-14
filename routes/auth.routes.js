@@ -155,4 +155,47 @@ router.get("/verify", isAuthenticated, (req, res, next) => {
   res.status(200).json(req.payload);
 });
 
+// GET /auth/profile - Fetch the current user profile
+router.get("/profile", isAuthenticated, (req, res, next) => {
+  // Get the user id from the payload
+  const userId = req.payload._id;
+
+  User.findById(userId)
+    .then(user => {
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      // Exclude the password from the response
+      const { email, name, age, gender, picture } = user;
+      res.status(200).json({ email, name, age, gender, picture });
+    })
+    .catch(err => next(err));
+});
+
+// PUT /auth/profile - Update the user profile
+router.put("/profile", fileUploader.single("picture"), isAuthenticated, (req, res, next) => {
+  const userId = req.payload._id;
+  const { password, name, age, gender } = req.body;
+  let picture = req.file ? req.file.path : undefined;
+
+  const updateData = { name, age, gender, picture };
+
+  if (password) {
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    updateData.password = hashedPassword;
+  }
+
+  User.findByIdAndUpdate(userId, updateData, { new: true })
+    .then(user => {
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      // Exclude the password from the response
+      const { email, name, age, gender, picture } = user;
+      res.status(200).json({ email, name, age, gender, picture });
+    })
+    .catch(err => next(err));
+});
+
 module.exports = router;
