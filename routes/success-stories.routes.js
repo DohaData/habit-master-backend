@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const Habit = require("../models/Habit.model");
+const SuccessStory = require("../models/SuccessStory.model");
 
 router.get("/", (req, res, next) => {
-  Habit.find()
-    .then((habits) => res.json(habits))
+    SuccessStory.find().populate("userId habitId")
+    .then((stories) => res.json(stories))
     .catch((err) => next(err));
 });
 
