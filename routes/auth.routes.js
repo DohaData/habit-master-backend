@@ -10,6 +10,8 @@ const jwt = require("jsonwebtoken");
 // Require the User model in order to interact with the database
 const User = require("../models/User.model");
 
+const fileUploader = require("../config/cloudinary.config");
+
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
@@ -17,11 +19,18 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
-router.post("/signup", (req, res, next) => {
-  const { email, password, name } = req.body;
+router.post("/signup", fileUploader.single("picture"), (req, res, next) => {
+  const { email, password, name, age, gender } = req.body;
+
+  const picture = req.file.path || "";
 
   // Check if email or password or name are provided as empty strings
-  if (email === "" || password === "" || name === "") {
+  if (
+    email === "" ||
+    password === "" ||
+    name === "" ||
+    (age === "") | (gender === "")
+  ) {
     res.status(400).json({ message: "Provide email, password and name" });
     return;
   }
@@ -58,15 +67,33 @@ router.post("/signup", (req, res, next) => {
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      return User.create({ email, password: hashedPassword, name });
+      if (picture) {
+        return User.create({
+          email,
+          password: hashedPassword,
+          name,
+          age,
+          gender,
+          isAdmin: false,
+          picture,
+        });
+      }
+      return User.create({
+        email,
+        password: hashedPassword,
+        name,
+        age,
+        gender,
+        isAdmin: false,
+      });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { email, name, _id } = createdUser;
+      const { email, name, _id, age, gender, isAdmin } = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { email, name, _id };
+      const user = { email, name, _id, age, gender, isAdmin };
 
       // Send a json response containing the user object
       res.status(201).json({ user: user });

@@ -18,36 +18,38 @@ mongoose
   })
   .catch((error) => console.error("Error connecting to MongoDB:", error));
 
+const saltRounds = 10;
+
 async function seedData() {
   try {
-    const hashedPassword1 = await bcrypt.hash("password123", 10);
-    const hashedPassword2 = await bcrypt.hash("password456", 10);
-    const hashedPassword3 = await bcrypt.hash("password789", 10);
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync("abc123", salt);
 
     // Create Users
     const users = await User.insertMany([
       {
         name: "John Doe",
         email: "john@example.com",
-        password: hashedPassword1,
+        password: hashedPassword,
         age: 30,
         gender: "male",
         isAdmin: true,
         picture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
-              },
+      },
       {
         name: "Jane Smith",
         email: "jane@example.com",
-        password: hashedPassword2,
+        password: hashedPassword,
         age: 25,
         gender: "female",
         isAdmin: false,
-        picture: "https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde",
+        picture:
+          "https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde",
       },
       {
         name: "Sam Johnson",
         email: "sam@example.com",
-        password: hashedPassword3,
+        password: hashedPassword,
         age: 28,
         gender: "non-binary",
         isAdmin: false,
