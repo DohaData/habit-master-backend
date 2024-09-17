@@ -27,6 +27,9 @@ app.use("/habits", habitsRoutes);
 const successStoriesRoutes = require("./routes/success-stories.routes");
 app.use("/success-stories", successStoriesRoutes);
 
+const trackerRoutes = require("./routes/tracker.routes");
+app.use("/tracker", trackerRoutes);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
