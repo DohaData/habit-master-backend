@@ -9,11 +9,15 @@ router.get("/", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.post ("/", isAuthenticated, (req, res, next) => {
-  const { name, description, frequency, defaultTasks, creator, DisplayedPicture } = req.body;
+router.post ("/create-habit", isAuthenticated, (req, res, next) => {
+  console.log(req.body)
+  const creator = req.payload._id;
+  const { name, description, frequency, defaultTasks, DisplayedPicture } = req.body;
   Habit.create({ name, description, frequency, defaultTasks, creator, DisplayedPicture })
     .then((habit) => res.json(habit))
     .catch((err) => next(err));
 });
 
+
 module.exports = router;
+
