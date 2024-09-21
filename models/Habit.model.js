@@ -9,12 +9,12 @@ const habitSchema = new Schema(
         },
         description: {
             type: String,
-            required: [true, "Description is required."],
+            required: [false, "Description is required."],
         },
         frequency: {
             type: String,
             enum: ["Daily", "Weekly", "Monthly"],
-            required: [true, "Frequency is required."],
+            required: [false, "Frequency is required."],
         },
         defaultTasks: {
             type: [String],
